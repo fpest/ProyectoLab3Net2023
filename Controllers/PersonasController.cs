@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 using ProyectoPropioLab3.Models;
+using MySqlConnector;
 
 namespace ProyectoPropioLab3.Controllers;
 
@@ -78,6 +79,112 @@ public class PersonasController : ControllerBase
             }
     
 			}
+
+//preparadoBase
+
+
+        [HttpGet("preparadoBase")]
+		public IActionResult preparadoBase()
+		{
+			
+		var id = int.Parse(User.Identity.Name);
+		
+            try
+            {
+
+//Prepara Carreras    	
+		List<Inscripcionc> insc = context.Inscripcionc
+			.Where(x=>x.personaid == id).ToList();
+		
+		List<Carrera> carre = context.Carrera.ToList();
+		
+		foreach (Carrera car in carre)
+		{
+	    var inscrinueva = new Inscripcionc();
+		
+		inscrinueva.carreraid = car.id;
+		inscrinueva.personaid = id;
+		inscrinueva.estado = "Disponible";
+		inscrinueva.fechahora = Convert.ToDateTime("2023-01-01");
+
+		context.Inscripcionc.Add(inscrinueva);
+
+		}
+		context.SaveChanges();
+
+
+foreach(Inscripcionc inscri in insc){
+
+		var inscrinuevados = new Inscripcionc();
+		inscrinuevados.carreraid = inscri.carreraid;
+		inscrinuevados.personaid = inscri.personaid;
+		inscrinuevados.estado = inscri.estado;
+		inscrinuevados.fechahora = inscri.fechahora;//Convert.ToDateTime("2023-01-01");
+
+		context.Inscripcionc.Add(inscrinuevados);
+}
+context.SaveChanges();
+// Hasta aqui prepara carreras
+//Prepara Materias
+
+		List<Inscripcionm> insm = context.Inscripcionm
+			.Where(x=>x.personaid == id).ToList();
+		
+		List<Materia> mate = context.Materia.ToList();
+		
+		foreach (Materia mat in mate)
+		{
+	    var inscrinueva = new Inscripcionm();
+		
+		inscrinueva.materiaid = mat.id;
+		inscrinueva.personaid = id;
+		inscrinueva.estado = "Disponible";
+		inscrinueva.fechahora = Convert.ToDateTime("2023-01-01");
+
+		context.Inscripcionm.Add(inscrinueva);
+
+		}
+		context.SaveChanges();
+
+
+foreach(Inscripcionm inscri in insm){
+
+		var inscrinuevados = new Inscripcionm();
+		inscrinuevados.materiaid = inscri.materiaid;
+		inscrinuevados.personaid = inscri.personaid;
+		inscrinuevados.estado = inscri.estado;
+		inscrinuevados.fechahora = inscri.fechahora;//Convert.ToDateTime("2023-01-01");
+
+		context.Inscripcionm.Add(inscrinuevados);
+}
+context.SaveChanges();
+
+
+
+
+
+
+
+
+// Hasta aqui prepara materias
+
+
+
+                return Ok("sss");//
+            }
+            
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+    
+        }
+
+//preparadoBase
+
+
+
+
 
 
 
@@ -195,7 +302,7 @@ public class PersonasController : ControllerBase
                     
 					var claims = new List<Claim>
 					{
-						//new Claim(ClaimTypes.Name, p.Id.ToString()),
+						//new Claim(ClaimTypes.Id, p.Id.ToString()),
 
 						new Claim(ClaimTypes.Name, p.id.ToString())
 				    };
@@ -247,6 +354,7 @@ public class PersonasController : ControllerBase
 					
 						String nuevaClaveSin = nuevaClave;
 
+						//nuevaClave = "123";
 				nuevaClave = Convert.ToBase64String(KeyDerivation.Pbkdf2(
 							password: nuevaClave,
 							salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
@@ -263,7 +371,7 @@ public class PersonasController : ControllerBase
 				message.To.Add(new MailboxAddress(perfil.nombre, perfil.email));
 				message.From.Add(new MailboxAddress(perfil.nombre, perfil.email));
 	
-				message.Subject = "Nueva Password para la Aplicación de la Inmobiliaria Pestchanker";
+				message.Subject = "Nueva Password para la Aplicación del Instituto ESAC.";
 				message.Body = new TextPart("html")
 				{
 					Text = @$"<h1>Hola</h1>
@@ -307,7 +415,7 @@ public class PersonasController : ControllerBase
 					
 					
 					{
-					//	new Claim(ClaimTypes.Name, entidad1.Id.ToString()),
+						new Claim(ClaimTypes.Name, entidad1.id.ToString()),
 				    };
 
 

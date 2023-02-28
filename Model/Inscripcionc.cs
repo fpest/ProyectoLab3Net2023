@@ -19,6 +19,7 @@ namespace ProyectoPropioLab3.Models
 		public DateTime fechahora { get; set; }
 		[Required]
 		public string estado { get; set; }
+		public Carrera? carrera {get; set;}
 	   
 	}
 }

@@ -17,6 +17,7 @@ namespace ProyectoPropioLab3.Models
 		[Required]
         [ForeignKey(nameof(Carrera))]
 		public int carreraid { get; set; }
+        public Inscripcionm inscripcionm{get; set;}
 
 
        public Carrera carrera { get; set; }

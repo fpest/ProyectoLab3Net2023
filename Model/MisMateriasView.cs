@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace ProyectoPropioLab3.Models
 {
-    public class Carrera
-    {
+    public class MisMateriasView
+{
         [Key]
         [Display(Name = "Código")]
         public int id { get; set; }
 		[Required]
-		public string descripcion { get; set; }
+		public String descripcion { get; set; }
 		[Required]
 		public int ciclolectivo { get; set; }
-        public Inscripcionc inscripcionc {get; set;}
+       [Required]
+        public String estado { get; set; }
+        
 	}
 }

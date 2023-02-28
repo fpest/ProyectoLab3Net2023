@@ -21,9 +21,14 @@ namespace ProyectoPropioLab3.Controllers;
        public DbSet<Carrera> Carrera { get; set; }
 
        public DbSet<Inscripcionm> Inscripcionm { get; set; }
+         public DbSet<Inscripcionc> Inscripcionc { get; set; }
 
         public DbSet<Registronotas> Registronotas { get; set; }
          public DbSet<Cuentacorriente> Cuentacorriente { get; set; }
  
+ public DbSet<MisCarrerasView> MisCarrerasView { get; set; }
+ public DbSet<MisMateriasView> MisMateriasView { get; set; }
+ 
+
     }
 

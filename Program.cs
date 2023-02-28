@@ -47,7 +47,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 							// If the request is for our hub...
 							var path = context.HttpContext.Request.Path;
 							if (!string.IsNullOrEmpty(accessToken) &&
-								path.StartsWithSegments("/Propietarios/token"))
+								path.StartsWithSegments("/Personas/token"))
 							{//reemplazar la url por la usada en la ruta ⬆
 								context.Token = accessToken;
 							}

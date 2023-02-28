@@ -17,11 +17,11 @@ namespace ProyectoPropioLab3.Controllers;
 //Para autorizar
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
-public class MateriasController : ControllerBase
+public class CarrerasController : ControllerBase
 {
     private readonly DataContext context;
      private readonly IConfiguration config;
-    public MateriasController(DataContext dataContext, IConfiguration config)
+    public CarrerasController(DataContext dataContext, IConfiguration config)
         {
             
             
@@ -31,9 +31,10 @@ public class MateriasController : ControllerBase
         }
        
 
+        //pedidoInscripcion
 
-        [HttpPost("pedidoInscripcionMaterias")]
-		public IActionResult pedidoInscripcionMaterias(String materia, String estado, String ciclolectivo)
+        [HttpPost("pedidoInscripcion")]
+		public IActionResult pedidoInscripcion(String carrera, String estado, String ciclolectivo)
 		{
            
 
@@ -42,26 +43,25 @@ public class MateriasController : ControllerBase
                 var id = int.Parse(User.Identity.Name);
                 
     
-                var mate = context.Materia
-                .Include(c => c.carrera)
-                .Where(x => x.descripcion == materia && x.carrera.ciclolectivo.ToString() == ciclolectivo).First();
+                var carre = context.Carrera
+                .Where(x => x.descripcion == carrera && x.ciclolectivo.ToString() == ciclolectivo).First();
 
 
-                var i = context.Database.ExecuteSqlRaw("DELETE FROM inscripcionm WHERE personaid = " + id + " and materiaid = " + mate.id);
+                var i = context.Database.ExecuteSqlRaw("DELETE FROM inscripcionc WHERE personaid = " + id + " and carreraid = " + carre.id);
                 context.SaveChanges();
 
 
 
-                Inscripcionm inscnueva= new Inscripcionm();
+                Inscripcionc inscnueva= new Inscripcionc();
 
                 
-                inscnueva.materiaid = mate.id;
+                inscnueva.carreraid = carre.id;
                 inscnueva.estado="Pendiente";
                 inscnueva.personaid= id;
                 inscnueva.fechahora = DateTime.Now;
 
 
-                var p1 = context.Inscripcionm.Add(inscnueva);
+                var p1 = context.Inscripcionc.Add(inscnueva);
                 context.SaveChanges();
 
                     
@@ -76,35 +76,30 @@ public class MateriasController : ControllerBase
             }
     
 			}
-// Hasta aqui
 
 
-
-
-
-
-
-
-
-
-        [HttpGet("ListarMaterias")]
+        [HttpGet("ListarCarreras")]
         // Get Materias
-		public async Task<IActionResult> ListarMaterias()
+		public async Task<IActionResult> ListarCarreras()
 		{
             try
             {
 
             var id = int.Parse(User.Identity.Name);
 
-   
-      var i = context.MisMateriasView.FromSqlRaw<MisMateriasView>("SELECT DISTINCT mat.id, carr.ciclolectivo AS ciclolectivo, mat.descripcion As descripcion, inscm.estado as estado FROM `materia` mat Join inscripcionm inscm on mat.id = inscm.materiaid join carrera carr on carr.id = mat.carreraid join inscripcionc inscc on carr.id = inscc.carreraid where inscm.personaid = "+ id +" and inscc.estado='Vigente' and inscc.personaid = "+ id +""); 
 
-                        
-                        
-                        
-                        
-                        			
-			   
+         
+  	   var i = from carre in context.Carrera
+					join inscripcionc in context.Inscripcionc on carre.id equals inscripcionc.carreraid
+                    where inscripcionc.personaid == id
+               		select new {
+						ciclolectivo = carre.ciclolectivo,
+						descripcion = carre.descripcion,
+						estado = inscripcionc.estado					};
+			
+
+
+  			   
 			   return Ok(i);//
             }
             
